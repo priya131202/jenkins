@@ -1,12 +1,14 @@
-FROM jenkins/jenkins:lts-jdk11
+FROM jenkins/jenkins:lts-alpine
 USER root
-RUN apt-get update && apt-get install -y lsb-release
-RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
-  https://download.docker.com/linux/debian/gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) \
-  signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
-  https://download.docker.com/linux/debian \
-  $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
-RUN apt-get update && apt-get install -y docker-ce-cli
-USER jenkins
-RUN jenkins-plugin-cli --plugins "blueocean:1.25.3 docker-workflow:1.28"
+RUN apk add python3 && \
+ python3 -m ensurepip && \
+ pip3 install --upgrade pip setuptools && \
+ if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
+ if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+ rm -r /root/.cache
+RUN pip install alpine==0.0.2
+RUN apk add pkgconf
+RUN apk add build-base
+RUN apk add python3-dev
+RUN apk add postgresql-dev
+RUN apk add postgresql-client
