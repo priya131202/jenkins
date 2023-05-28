@@ -12,3 +12,17 @@ RUN apk add build-base
 RUN apk add python3-dev
 RUN apk add postgresql-dev
 RUN apk add postgresql-client
+FROM jenkins/jenkins:latest
+
+
+
+# Install Python 3 and pip
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Set Python 3 as the default Python version
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+
+USER jenkins
+
+# Continue with your Jenkins setup and configurations
+
